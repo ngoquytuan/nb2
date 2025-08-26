@@ -1,0 +1,17 @@
+spam_filter_demo/
+├── app.py        ok         # Flask app chính
+├── models/
+│   ├── __init__.py
+│   ├── naive_bayes.py    ok   # Naive Bayes classifier
+│   └── llm_analyzer.py   ok # LLM API calls
+├── database/
+│   ├── __init__.py
+│   └── db_manager.py  ok    # SQLite operations
+├── config.py OK              # Configuration
+├── static/                # Frontend files
+│   ├── index.html ok
+│   ├── style.css ok
+│   └── app.js   ok
+├── data/
+│   └── training_data.json    ok   # Dataset giả lập
+└── requirements.txt ok

@@ -1,0 +1,12 @@
+services:
+  spam-filter-app:
+    build: .
+    container_name: spam_filter_container
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./database:/app/database
+    environment:
+
+      GROQ_API_KEY: gsk_Mi3R33ae
+      OPENROUTER_API_KEY: sk-or-v1-beff0b93b4

@@ -1,0 +1,53 @@
+{
+    "legitimate": [
+        "Xin chào, tôi muốn hỏi về sản phẩm của công ty",
+        "Cảm ơn bạn đã hỗ trợ tôi hôm qua",
+        "Khi nào có meeting tiếp theo?",
+        "Báo cáo tháng này đã hoàn thành",
+        "Chúc mừng sinh nhật! Chúc bạn nhiều sức khỏe",
+        "Sản phẩm của bên bạn giá cao quá, có thể giảm giá cho tôi không?",
+        "Tôi cần hỗ trợ về tài khoản của mình",
+        "Lịch làm việc tuần này thế nào?",
+        "Sản phẩm này có bảo hành không?",
+        "Tôi cần hỏi về sản phẩm",
+        "Xin lỗi vì phản hồi muộn",
+        "Có thể gửi thêm thông tin không?",
+        "Có thể gửi thêm tài liệu không?"
+    ],
+    "spam": [
+        "CHÚC MỪNG! Bạn đã trúng giải 100 triệu VND! Click link ngay",
+        "Vay tiền nhanh 24/7, không cần thế chấp! Liên hệ ngay",
+        "Khuyến mãi đặc biệt chỉ hôm nay! Giảm 90% tất cả sản phẩm",
+        "Bạn có muốn kiếm 50 triệu/tháng tại nhà không?",
+        "CẢNH BÁO! Tài khoản sẽ bị khóa nếu không xác thực ngay",
+        "Nhấp vào đây để nhận iPhone 15 Pro Max miễn phí",
+        "Đầu tư Forex với lợi nhuận 500% mỗi tháng",
+		"Phần tiền thanh toán còn lại gửi sớm cho tôi nhé, tôi đã đổi số tài khoản",
+        "Tôi đã đổi số tài khoản thanh toán, gửi ngay cho tôi",
+        "Thuốc tăng cường sinh lý nam 100% từ thiên nhiên",
+		"Chuyển tiền vào tài khoản mới này nhé",
+        "Số tài khoản cũ có vấn đề, chuyển sang số mới",
+        "Đổi tài khoản rồi, chuyển vào đây nha",
+        "Mua 1 tặng 10! Cơ hội có 1 không 2!",
+        "Xác thực thông tin ngân hàng để tránh bị hack"
+    ],
+    "suspicious": [
+        "Anh có thể chuyển khoản giúp em không? Em sẽ trả sau",
+        "Link này hay lắm, bạn vào xem đi",
+        "Tôi cần tiền gấp, bạn có thể giúp không?",
+        "Nhấp vào đây để xem ảnh",
+        "Bạn có tin tôi không? Đây là cơ hội đầu tư tốt",
+        "Gửi mã OTP giúp tôi, tôi đang gặp khó khăn",
+        "Tải app này để có tiền thưởng",
+        "Bạn muốn làm giàu nhanh không?",
+        "Chương trình ưu đãi đặc biệt cho bạn",
+        "Bạn có thẻ ATM không? Cho mình mượn một chút",
+        "Đầu tư với tôi, lãi suất cao, không rủi ro",
+        "Bạn có muốn mua thẻ điện thoại giá rẻ không?",
+        "Tôi có thông tin nội bộ về cổ phiếu này",
+        "Bạn quan tâm đến việc làm thêm tại nhà không?",
+        "Tài khoản thanh toán thay đổi rồi nhé",
+        "Gửi tiền vào số tài khoản này giúp tôi",
+        "Xác nhận thông tin để nhận quà"
+    ]
+}

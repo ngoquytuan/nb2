@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Filter Demo - Anti-Scam Chat System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🛡️ Spam Filter Demo</h1>
+            <p>AI-Powered Anti-Scam Chat System</p>
+            <div class="status-indicator" id="connectionStatus">
+                <span class="status-dot offline"></span>
+                <span>Disconnected</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="panel chat-panel">
+                <h2>💬 Send Message</h2>
+                
+                <form id="messageForm" class="message-form">
+                    <div class="form-group">
+                        <label for="sender">Sender Name:</label>
+                        <input type="text" id="sender" name="sender" placeholder="Your name..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="4" 
+                                placeholder="Type your message here..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+
+                <div class="quick-tests">
+                    <h3>🧪 Quick Tests</h3>
+                    <div class="test-buttons">
+                        <button class="btn btn-small btn-success" onclick="sendTestMessage('legitimate')">
+                            ✅ Legitimate
+                        </button>
+                        <button class="btn btn-small btn-warning" onclick="sendTestMessage('suspicious')">
+                            ⚠️ Suspicious
+                        </button>
+                        <button class="btn btn-small btn-danger" onclick="sendTestMessage('spam')">
+                            ❌ Spam
+                        </button>
+                    </div>
+                </div>
+
+                <div id="processingStatus" class="processing-status" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <span>Processing message...</span>
+                </div>
+            </div>
+
+            <div class="panel results-panel">
+                <div class="tabs">
+                    <button class="tab-button active" onclick="showTab('inbox')">
+                        📥 Inbox
+                    </button>
+                    <button class="tab-button" onclick="showTab('flagged')">
+                        ⚠️ Flagged
+                    </button>
+                    <button class="tab-button" onclick="showTab('blocked')">
+                        🚫 Blocked
+                    </button>
+                    <button class="tab-button" onclick="showTab('admin')">
+                        🔧 Admin
+                    </button>
+                    <button class="tab-button" onclick="showTab('settings')">
+                        ⚙️ Settings
+                    </button>
+                </div>
+
+                <div id="inbox-tab" class="tab-content active">
+                    <h3>📥 Clean Messages</h3>
+                    <div id="inboxMessages" class="message-list">
+                        <p class="empty-state">No messages yet...</p>
+                    </div>
+                </div>
+
+                <div id="flagged-tab" class="tab-content">
+                    <h3>⚠️ Flagged Messages</h3>
+                    <div id="flaggedMessages" class="message-list">
+                        <p class="empty-state">No flagged messages...</p>
+                    </div>
+                </div>
+
+                <div id="blocked-tab" class="tab-content">
+                    <h3>🚫 Blocked Messages</h3>
+                    <div id="blockedMessages" class="message-list">
+                        <p class="empty-state">No blocked messages...</p>
+                    </div>
+                </div>
+
+                <div id="admin-tab" class="tab-content">
+                    <h3>🔧 Admin Panel</h3>
+                    <div class="admin-controls">
+                        <button class="btn btn-info" onclick="refreshAllData()">
+                            🔄 Refresh All
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportLogs()">
+                            📊 Export Logs
+                        </button>
+                    </div>
+                    <div id="adminMessages" class="message-list admin-list">
+                        <p class="empty-state">Loading admin data...</p>
+                    </div>
+                </div>
+                
+                <div id="settings-tab" class="tab-content">
+                    <div class="settings-section">
+                        <h4>🤖 LLM Configuration</h4>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <label for="llm_provider">Provider:</label>
+                                <select id="llm_provider" name="llm_provider">
+                                    <option value="openai">OpenAI</option>
+                                    <option value="groq">Groq</option>
+                                    <option value="openrouter">OpenRouter</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="openai_api_key">OpenAI API Key:</label>
+                                <input type="password" id="openai_api_key" name="openai_api_key" 
+                                       placeholder="sk-...">
+                                <button type="button" class="btn btn-small btn-info" 
+                                        onclick="testLLMConnection('openai')">Test</button>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="groq_api_key">Groq API Key:</label>
+                                <input type="password" id="groq_api_key" name="groq_api_key" 
+                                       placeholder="gsk_...">
+                                <button type="button" class="btn btn-small btn-info" 
+                                        onclick="testLLMConnection('groq')">Test</button>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="openrouter_api_key">OpenRouter API Key:</label>
+                                <input type="password" id="openrouter_api_key" name="openrouter_api_key" 
+                                       placeholder="sk-or-...">
+                                <button type="button" class="btn btn-small btn-info" 
+                                        onclick="testLLMConnection('openrouter')">Test</button>
+                            </div>
+                        </div>
+                        
+                        <div class="health-status" id="llmHealthStatus">
+                            <h5>Provider Health Status</h5>
+                            <div id="healthStatusContent">
+                                <p class="loading">Checking...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h4>🔍 Filter Configuration</h4>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <label for="naive_bayes_threshold">Naive Bayes Threshold:</label>
+                                <input type="range" id="naive_bayes_threshold" name="naive_bayes_threshold" 
+                                       min="0.1" max="1.0" step="0.1">
+                                <span class="range-value" id="nb_threshold_value">0.7</span>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label for="suspicious_threshold">Suspicious Threshold:</label>
+                                <input type="range" id="suspicious_threshold" name="suspicious_threshold" 
+                                       min="0.1" max="1.0" step="0.1">
+                                <span class="range-value" id="sus_threshold_value">0.5</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h4>🔧 System Settings</h4>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="enable_mock_fallback" name="enable_mock_fallback" checked>
+                                    Enable Mock Fallback
+                                </label>
+                                <small>Use enhanced mock analysis when LLM fails</small>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <label>
+                                    <input type="checkbox" id="enable_health_check" name="enable_health_check" checked>
+                                    Enable Health Monitoring
+                                </label>
+                                <small>Automatically check LLM provider health</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-actions">
+                        <button class="btn btn-primary" onclick="saveSettings()">
+                            💾 Save Settings
+                        </button>
+                        <button class="btn btn-info" onclick="loadSettings()">
+                            🔄 Reload Settings
+                        </button>
+                        <button class="btn btn-warning" onclick="testCurrentLLM()">
+                            🧪 Test Current LLM
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">Total Processed:</span>
+                <span id="totalProcessed" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Legitimate:</span>
+                <span id="legitimateCount" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Suspicious:</span>
+                <span id="suspiciousCount" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Blocked:</span>
+                <span id="blockedCount" class="stat-value">0</span>
+            </div>
+        </div>
+
+        <div id="toastContainer" class="toast-container"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
